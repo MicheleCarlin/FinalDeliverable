@@ -1,0 +1,47 @@
+---
+title: "UMass Chan Medical School: Diversity and the Admissions Process"
+bibliography: MCarlinCollection.bib
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard) # always
+```
+
+## Intro {.sidebar}
+
+Preparing the dashboard based on the instructions given at @magallanes_reyes_data_2022, and @aden-buie_flexdashboard_2023.
+
+
+
+### Plot 1A
+
+
+```{r}
+readRDS("Plot1A_Univariate_Categorical.rds")
+```
+
+
+
+### Plot 2
+
+```{r}
+readRDS("Plot2_Univariate_Numeric.rds")
+```
+
+
+### Plot 3A
+
+```{r}
+readRDS("Plot3A_Bivariate_Cat-Numeric.rds")
+```
+
+### Plot 4A
+
+```{r}
+readRDS("Plot4A_Bivariate_Numeric-Numeric.rds")
+```
+
+### References
