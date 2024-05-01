@@ -1,5 +1,5 @@
 ---
-title: "UMass Chan Medical School: Diversity and the Admissions Process"
+title: "UMass Chan Medical School Applicant Data"
 bibliography: MCarlinCollection.bib
 output: 
   flexdashboard::flex_dashboard
@@ -11,8 +11,13 @@ library(flexdashboard) # always
 
 ## Sidebar {.sidebar}
 
-
-Preparing the dashboard based on the instructions given at @magallanes_reyes_data_2022, and @aden-buie_flexdashboard_2023.
+Research has shown that white students perform better on standardized testing and have higher science GPAs than underrepresented minority (URM) students. This disparity starts very early on in their educational careers and tends to worsen over the years, including within medical education. 
+ 
+References:  
+@aden-buie_flexdashboard_2023  
+@lucey_consequences_2020  
+@magallanes_reyes_data_2022  
+@nakae_academic_2021  
 
 ## Column {.tabset .tabset-fade}
 
@@ -30,7 +35,7 @@ readRDS("Plot1A_Univariate_Categorical.rds")
 readRDS("Plot2_Univariate_Numeric.rds")
 ```
 
-### Plot 3
+### Plot 3 
 
 ```{r}
 readRDS("Plot3A_Bivariate_Cat-Numeric.rds")
@@ -40,7 +45,7 @@ readRDS("Plot3A_Bivariate_Cat-Numeric.rds")
 ### Plot 4
 
 ```{r}
-readRDS("Plot4A_Bivariate_Numeric-Numeric.rds")
+readRDS("Plot4_Choropleth.rds")
 ```
 
 

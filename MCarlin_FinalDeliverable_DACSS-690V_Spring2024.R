@@ -40,14 +40,15 @@ library(stringr)
 plot1a= ggplot(data=RaceTable, aes(x =Race, y =Percent)) + 
   geom_bar(fill ="navy", stat = 'identity') +
   theme_classic() +
-  labs(title='UMass Chan Medical School', subtitle='2019-2023 Applicants by Race - US Permanent Residents',
+  labs(title='2019-2023 UMass Chan Medical School Applicants', subtitle='by Race (US Permanent Residents Only)',
        x = NULL, y = NULL, caption = 'Source: UMass Chan Medical School Institutional Research Data') +
   scale_y_continuous(breaks=c(0,10,20,30,40,50), limits = c(0, 50)) +
   theme(plot.caption = element_text(hjust = 0), plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
   geom_text(aes(label=paste0(round(Percent, 2), "%") ), position=position_dodge(width=0.9), vjust=-0.5, size=3) +
   scale_x_discrete(limits = c("White", "Asian", "Hispanic", "Black or African American", "Not Specified", "American Indian or Alaskan Native", "Native Hawaiian or Other Pacific Islander"),
                    labels = scales::label_wrap(8)) +
-  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.title.y = element_blank())
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.title.y = element_blank()) +
+  theme(legend.title = element_text(size=8)) 
 plot1a
 saveRDS(plot1a, file = "Plot1A_Univariate_Categorical.rds")
 
@@ -94,13 +95,15 @@ plot2 = ggplot(Admissions_df,aes(y = `MCAT Total Score`)) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 40, size = 8, vjust = 0.5)) +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.title.y = element_blank()) +
-  labs(title='UMass Chan Medical School', subtitle='2019-2023 Applicants: MCAT Total Score',
+  labs(title='2019-2023 UMass Chan Medical School Applicants', subtitle='Average MCAT Total Score',
        x = NULL, y = NULL, caption = 'Source: UMass Chan Medical School Institutional Research Data') +
-  theme(plot.caption = element_text(hjust = 0), plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) 
+  theme(plot.caption = element_text(hjust = 0), plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
+  theme(legend.title = element_text(size=8)) 
 plot2
 saveRDS(plot2, file = "Plot2_Univariate_Numeric.rds")
 
-## CATEGORICAL/NUMERICAL DATA.
+
+## CATEGORICAL/NUMERICAL or NUMERICAL/NUMERICAL DATA.
 
 # Plot 3: GPA by Race, MCAT Total Score by Race
 
@@ -113,12 +116,15 @@ plot3a = ggplot(Admissions_df, aes(x=`MCAT Total Score`, y=Race)) +
   stat_summary(fun = "mean",
                geom = "point",
                color = "blue") +
+  annotate(geom='text', color='blue', label="Cutoff for Acceptance = 508", width = 20, indent = 0,
+           y = 2.5, x=495, angle=0, size=2.5) +
   theme_classic() +
   geom_vline(xintercept = 508, color='blue', linetype="dotdash",  size=1) +
   scale_y_discrete(limits = c("White", "Asian", "Native Hawaiian or Other Pacific Islander", "Hispanic", "Black or African American", "American Indian or Alaskan Native")) +
-  labs(title='UMass Chan Medical School', subtitle='Average MCAT Total Score by Race',
+  labs(title='2019-2023 UMass Chan Medical School Applicants', subtitle='Average MCAT Total Score by Race',
        x = NULL, y = NULL, caption = 'Source: UMass Chan Medical School Institutional Research Data') +
-  theme(plot.caption = element_text(hjust = 0), plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) 
+  theme(plot.caption = element_text(hjust = 0), plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
+  theme(title=element_text(size=8))
 plot3a
 saveRDS(plot3a, file = "Plot3A_Bivariate_Cat-Numeric.rds")
 
@@ -136,45 +142,109 @@ plot3b = ggplot(Admissions_df, aes(x=`MCAT Total Score`, y=URM)) +
 plot3b
 saveRDS(plot3b, file = "Plot3B_Bivariate_Cat-Numeric.rds")
 
-## NUMERICAL/NUMERICAL DATA.
-
-# Plot 4: GPA by MCAT Total Score
 
 Race_Aggr=aggregate(data=Admissions_df,cbind(`GPA-Science`,`GPA-NonScience`,`GPA-Total`,`MCAT Total Score`)~Race,median)
 
 library(ggrepel)
 cor.test(Race_Aggr$`GPA-Science`,Race_Aggr$`MCAT Total Score`,method = "pearson")
-plot4a = ggplot(Race_Aggr, aes(x=`GPA-Science`,y=`MCAT Total Score`)) +
+plot3C = ggplot(Race_Aggr, aes(x=`GPA-Science`,y=`MCAT Total Score`)) +
   geom_point() +
   geom_text_repel(aes(label=Race),size=2) +
   xlim(c(3.0, 4.0)) +
   theme_classic() +
-  labs(title='UMass Chan Medical School', subtitle='MCAT Total Score and GPA (Science) by URM Status',
+  labs(title='MCAT Total Score and Average GPA (Science)', subtitle='by URM Status',
        x = NULL, y = NULL, caption = 'Source: UMass Chan Medical School Institutional Research Data') +
   theme(plot.caption = element_text(hjust = 0), plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5))
-plot4a
-saveRDS(plot4a, file = "Plot4A_Bivariate_Numeric-Numeric.rds")
+plot3C
+saveRDS(plot3C, file = "Plot3C_Bivariate_Numeric-Numeric.rds")
 
 cor.test(Race_Aggr$`GPA-NonScience`,Race_Aggr$`MCAT Total Score`,method = "pearson")
-plot4b = ggplot(Race_Aggr, aes(x=`GPA-NonScience`,y=`MCAT Total Score`)) +
+plot3D = ggplot(Race_Aggr, aes(x=`GPA-NonScience`,y=`MCAT Total Score`)) +
   geom_point() +
   geom_text_repel(aes(label=Race),size=2) +
   xlim(c(3.0, 4.0)) +
   labs(title='UMass Chan Medical School', subtitle='MCAT Total Score and GPA (Non-Science) by URM Status',
        x = NULL, y = NULL, caption = 'Source: UMass Chan Medical School Institutional Research Data') +
   theme(plot.caption = element_text(hjust = 0), plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5))
-plot4b
-saveRDS(plot4b, file = "Plot4B_Bivariate_Numeric-Numeric.rds")
+plot3D
+saveRDS(plot3D, file = "Plot3D_Bivariate_Numeric-Numeric.rds")
 
 cor.test(Race_Aggr$`GPA-Total`,Race_Aggr$`MCAT Total Score`,method = "pearson")
-plot4c = ggplot(Race_Aggr, aes(x=`GPA-Total`,y=`MCAT Total Score`)) +
+plot3E = ggplot(Race_Aggr, aes(x=`GPA-Total`,y=`MCAT Total Score`)) +
   geom_point() +
   geom_text_repel(aes(label=Race),size=2) +
   xlim(c(3.0, 4.0)) +
   labs(title='UMass Chan Medical School', subtitle='MCAT Total Score and Total GPA by URM Status',
        x = NULL, y = NULL, caption = 'Source: UMass Chan Medical School Institutional Research Data') +
   theme(plot.caption = element_text(hjust = 0), plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5))
-plot4c
-saveRDS(plot4c, file = "Plot4C_Bivariate_Numeric-Numeric.rds")
+plot3E
+saveRDS(plot3E, file = "Plot3E_Bivariate_Numeric-Numeric.rds")
 
-## Add facet for admitted (y/n) to MCAT v GPA plot
+
+
+## Plot 4: Map 
+names(Admissions_df)[names(Admissions_df) == "Legal Residence"] <- "region"
+StateFreq=table(Admissions_df$region)
+StateFreq
+
+StateProp=prop.table(StateFreq)*100
+StateProp
+
+# as data frame
+(StateTable=as.data.frame(StateFreq))
+# renaming data frame columns
+names(StateTable)=c("Code","Percent")
+# adding percents:
+StateTable$Percent=as.vector(StateProp)
+# then, you have:
+StateTable
+
+
+States_abbr <- read.csv("States_abbreviations.csv")
+head(States_abbr,10)
+Merge_df=merge(StateTable,States_abbr,
+               by.x='Code', by.y='Abbreviation')
+
+names(Merge_df)[names(Merge_df) == "State"] <- "region"
+Merge_df$region <- tolower(Merge_df$region)
+
+
+
+Merge_df <- Merge_df %>%
+  mutate(value = case_when(
+    Percent < 1.00 ~ "< 1%",
+    Percent >= 1.00 & Percent < 4.00 ~ "1 - 3.99%",
+    Percent >= 4.00 & Percent < 10.00 ~ "4 - 9.99%",
+    Percent >= 10.00 ~ ">= 10%"))
+table(select(Merge_df, value))
+
+Merge_df$value <- factor(Merge_df$value, levels = c("< 1%", "1 - 3.99%", "4 - 9.99%", ">= 10%"))
+
+library(choroplethrMaps)
+library(choroplethr)
+
+
+
+
+plot4 <- state_choropleth(Merge_df) + 
+  scale_fill_brewer(name="Percent of applicants \nfrom each state:", palette="Blues") +
+  labs(title='2019-2023 UMass Chan Medical Schools Applicants', subtitle='by Legal Residence State',
+      caption = 'Source: UMass Chan Medical School Institutional Research Data') +
+  theme(plot.caption = element_text(hjust = 0), plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5))
+plot4
+
+c = StateChoropleth$new(Merge_df)
+c$title = "2019-2023 UMass Chan Medical Schools Applicants \nby Legal Residence State"
+c$legend = "Percent of applicants \nfrom each state"
+c$set_num_colors(7)
+c$set_zoom(NULL)
+c$show_labels = FALSE
+plot4a = c$render()
+plot4a
+plot4 <- plot4a + labs(title='2019-2023 UMass Chan Medical School Applicants', subtitle='by Legal Residence State', caption = 'Source: UMass Chan Medical School Institutional Research Data') +
+   theme(plot.caption = element_text(hjust = 0), plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) +
+   theme(legend.title = element_text(size=8)) 
+plot4
+
+saveRDS(plot4, file = "Plot4_Choropleth.rds")
+
